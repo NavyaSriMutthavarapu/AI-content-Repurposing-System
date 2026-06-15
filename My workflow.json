@@ -1,0 +1,432 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "youtube_content",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "52170201-58aa-4b46-86b2-b5d426ee8479",
+      "name": "Webhook",
+      "webhookId": "fb262dfd-5910-438d-8a74-44fb4f261cf8"
+    },
+    {
+      "parameters": {
+        "jsCode": "const youtubeUrl = $input.first().json.body.youtube_url;\n\nif (!youtubeUrl) {\n  throw new Error(\"No YouTube URL provided\");\n}\n\nconst match = youtubeUrl.match(\n  /(?:youtu\\.be\\/|youtube\\.com\\/watch\\?v=)([^&]+)/\n);\n\nif (!match) {\n  throw new Error(\"Invalid YouTube URL\");\n}\n\nreturn [{\n  json: {\n    youtube_url: youtubeUrl,\n    videoId: match[1]\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        384,
+        0
+      ],
+      "id": "c355b112-1158-49d3-b38e-d4465ad7ebcf",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://mammal-breeches-superbowl.ngrok-free.dev/transcript",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "ngrok-skip-browser-warning",
+              "value": "true"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "videoId",
+              "value": "={{$json.videoId}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        560,
+        0
+      ],
+      "id": "adebbc21-a649-43aa-9700-c71ce3186248",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const transcript = $json.transcript || \"\";\n\nreturn [{\n  json: {\n    transcript: transcript.substring(0, 5000)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        752,
+        0
+      ],
+      "id": "65911121-98d5-4fbb-9793-4441ef0a6d44",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create an engaging Instagram caption from this YouTube transcript.\n\nTranscript:\n{{$json.content}}\n\nRequirements:\n- Use emojis\n- Add 10 hashtags\n- Engaging tone\n\nReturn only the caption.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1168,
+        384
+      ],
+      "id": "f1c95887-473d-4383-95f4-003ebe49408b",
+      "name": "Instagram generator",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a Twitter/X thread from this transcript.\n\nTranscript:\n{{$json.content}}\n\nRequirements:\n- 5 tweets\n- Number each tweet\n- Keep tweets concise\n\nReturn only the thread.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1168,
+        96
+      ],
+      "id": "279f534d-6113-4ba4-9b94-cdc3bcc7dac4",
+      "name": "Twitter Generator",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a blog article from this transcript.\n\nTranscript:\n{{$json.content}}\n\nRequirements:\n- Title\n- Introduction\n- Main Content\n- Conclusion\n- 500 words\n\nReturn in markdown format.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1184,
+        240
+      ],
+      "id": "5f93f6bd-1e96-4be0-8c82-a18a8938fa59",
+      "name": "Blog Generator",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        896,
+        224
+      ],
+      "id": "333b16db-15ba-4e18-a741-9e6e713c1cf3",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "E9KGv6Hyk6VJU3Df",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ec0cbd10-454f-443a-9303-f8fe6fbf0d33",
+              "name": "content",
+              "value": "={{$json.content}}",
+              "type": "string"
+            },
+            {
+              "id": "0da785c4-c5aa-4ecc-9621-e6bf8623a5dc",
+              "name": "source",
+              "value": "youtube",
+              "type": "string"
+            },
+            {
+              "id": "e648b20a-f703-4c41-a18e-14bdd0e76acf",
+              "name": "platform",
+              "value": "all",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        960,
+        0
+      ],
+      "id": "0ca61707-f939-4b4e-b6c4-6617911e82a4",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1552,
+        64
+      ],
+      "id": "7bcba986-26bd-43a6-bf84-e34f03c46326",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1904,
+        96
+      ],
+      "id": "0412da50-c492-4dde-97d4-78f417de652c",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn [\n{\n  json: {\n    linkedin: items[0]?.json?.text || \"\",\n    twitter: items[1]?.json?.text || \"\",\n    blog: items[2]?.json?.text || \"\",\n    instagram: items[3]?.json?.text || \"\"\n  }\n}\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1728,
+        96
+      ],
+      "id": "ef2693c0-b064-4826-8de2-46c08c7dc6d9",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a professional LinkedIn post from the following YouTube transcript.\n\nTranscript:\n{{$json.content}}\n\nRequirements:\n- Professional tone\n- 150-200 words\n- Include 5 relevant hashtags\n- End with a call to action\n\nReturn only the LinkedIn post.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        1168,
+        -64
+      ],
+      "id": "91151339-d248-45b3-a82c-232043376e1d",
+      "name": "Linkedin post",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Twitter Generator": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Blog Generator": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Instagram generator": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Linkedin post",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Twitter Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Blog Generator",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Instagram generator",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Linkedin post",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twitter Generator",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Blog Generator",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Instagram generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linkedin post": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "91df7dca-1b18-4d36-ad07-15b73b00bc1d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "22a0b5512c90f4ca7959b5521015d356a1e82c5e2d4a094d055825d6c7600748"
+  },
+  "nodeGroups": [],
+  "id": "lhTrt4eWNGSjcHXm",
+  "tags": []
+}
