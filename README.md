@@ -110,10 +110,12 @@ YouTube URL (Postman)
 
 ## Project Structure
 
+```text
 
 AI-Content-Repurposing-System/
 │
 ├── README.md
+|
 │
 ├── workflow/
 │   └── n8n_workflow.json
@@ -122,7 +124,7 @@ AI-Content-Repurposing-System/
     ├── workflow.png
     ├── postman_request.png
     └── output.png
-
+```
 
 ---
 
@@ -162,9 +164,17 @@ Screenshot of the generated LinkedIn post, Twitter/X thread, Instagram caption, 
 * Hashtag Recommendation System
 * Additional Content Formats
 
+---
+
+## License
+
+This project is developed for educational and portfolio purposes.
+
+---
 
 ## Author
 
 **M. Navya Sri**
+
 
 
