@@ -38,7 +38,7 @@ The system performs the following tasks:
    * 🐦 Twitter/X Thread
    * 📸 Instagram Caption
    * 📝 Blog Article
-5. Displays the generated content through a user-friendly interface.
+5. Delivers the generated content through an automated workflow.
 
 ---
 
