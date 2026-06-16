@@ -164,14 +164,6 @@ Screenshot of the generated LinkedIn post, Twitter/X thread, Instagram caption, 
 * Hashtag Recommendation System
 * Additional Content Formats
 
----
-
-## License
-
-This project is developed for educational and portfolio purposes.
-
----
-
 ## Author
 
 **M. Navya Sri**
