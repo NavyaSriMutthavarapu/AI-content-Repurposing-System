@@ -1,10 +1,10 @@
-# # 🚀 AI Content Repurposing System
+# 🚀 AI Content Repurposing System
 
 ## Overview
 
-The AI Content Repurposing System is an AI-powered automation solution that transforms YouTube videos into multiple content formats.
+The AI Content Repurposing System is an AI-powered automation workflow that transforms YouTube videos into multiple content formats.
 
-Users provide a YouTube video URL, and the system automatically extracts the video transcript, processes it using a Large Language Model (LLM), and generates platform-specific content suitable for social media and content marketing.
+Users provide a YouTube video URL, and the system automatically extracts the video transcript, processes it using a Large Language Model (LLM), and generates platform-specific content for social media and content marketing.
 
 This project demonstrates workflow automation, API integration, prompt engineering, and AI-powered content generation using n8n and Groq LLM.
 
@@ -12,14 +12,14 @@ This project demonstrates workflow automation, API integration, prompt engineeri
 
 ## Problem Statement
 
-Content creators, educators, marketers, and businesses often spend significant time repurposing long-form video content for multiple platforms.
+Content creators, educators, marketers, and businesses often spend significant time repurposing long-form video content into content suitable for different platforms.
 
 The traditional process involves:
 
-* Watching the entire video
+* Watching the video
 * Extracting key insights
 * Writing platform-specific content
-* Repeating the process for different social media platforms
+* Repeating the process for multiple platforms
 
 This manual workflow is time-consuming and inefficient.
 
@@ -88,7 +88,7 @@ YouTube URL (Postman)
  ┌─────────────────┐
  │ LinkedIn Post   │
  │ Twitter Thread  │
- │ Instagram Post  │
+ │ Instagram Caption│
  │ Blog Article    │
  └─────────────────┘
           ↓
@@ -103,17 +103,16 @@ YouTube URL (Postman)
 2. The request is forwarded to the n8n webhook using ngrok.
 3. The workflow extracts the transcript from the YouTube video.
 4. The transcript is processed by Groq LLM.
-5. The AI generates content optimized for different platforms.
+5. The AI generates platform-specific content.
 6. The generated content is returned as a structured API response.
 
 ---
 
 ## Project Structure
 
-```text
+
 AI-Content-Repurposing-System/
 │
-├── app.py
 ├── README.md
 │
 ├── workflow/
@@ -122,54 +121,18 @@ AI-Content-Repurposing-System/
 └── screenshots/
     ├── workflow.png
     ├── postman_request.png
-    ├── output.png
-```
+    └── output.png
+
 
 ---
 
-## Installation
+## Usage
 
-### Clone the Repository
-
-```bash
-git clone https://github.com/yourusername/AI-Content-Repurposing-System.git
-```
-
-### Navigate to the Project Directory
-
-```bash
-cd AI-Content-Repurposing-System
-```
-
-### Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Configure Environment Variables
-
-Create a `.env` file and add your API credentials:
-
-```env
-GROQ_API_KEY=your_api_key
-```
-
-### Start n8n
-
-```bash
-n8n start
-```
-
-### Expose Local Webhook using ngrok
-
-```bash
-ngrok http 5678
-```
-
-### Send Requests using Postman
-
-Use the generated ngrok URL to test the webhook endpoint and generate content.
+1. Start the n8n workflow.
+2. Expose the local webhook using ngrok.
+3. Copy the generated ngrok URL.
+4. Send a POST request from Postman containing the YouTube video URL.
+5. Receive AI-generated content in the API response.
 
 ---
 
@@ -177,15 +140,15 @@ Use the generated ngrok URL to test the webhook endpoint and generate content.
 
 ### Workflow Automation
 
-* n8n workflow showing the complete automation pipeline.
+Screenshot of the n8n workflow showing the complete automation pipeline.
 
 ### API Request
 
-* Postman request containing the YouTube video URL.
+Screenshot of the Postman request containing the YouTube video URL.
 
 ### Generated Output
 
-* AI-generated LinkedIn post, Twitter thread, Instagram caption, and blog article.
+Screenshot of the generated LinkedIn post, Twitter/X thread, Instagram caption, and blog article.
 
 ---
 
@@ -194,13 +157,11 @@ Use the generated ngrok URL to test the webhook endpoint and generate content.
 * Multi-Language Content Generation
 * Social Media Auto Posting
 * Content Scheduling
-* RAG-Based Knowledge Enhancement
+* RAG Integration
 * SEO Optimization
 * Hashtag Recommendation System
-* Content Performance Analytics
-* Support for Additional Platforms
+* Additional Content Formats
 
----
 
 ## Author
 
